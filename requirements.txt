@@ -1,7 +1,1 @@
-asgiref==3.5.0
-backports.zoneinfo==0.2.1
-Django==4.0.3
-pip==22.0.3
-setuptools==60.7.1
-sqlparse==0.4.2
-wheel==0.37.1
+Django==3.0.7
