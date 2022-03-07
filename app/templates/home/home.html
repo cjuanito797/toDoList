@@ -7,6 +7,13 @@
 <body>
 <h1>The ToDo List Application</h1>
 
-<h3>Hello World!</h3>
+<h3>Below are your lists.</h3>
+
+{% for list in my_lists %}
+    <h3>{{ list.name}}</h3>
+    {% for li in list.item.all %}
+        {{ li.name }} &nbsp; {{ li.urgency_level }} &nbsp; {{ li.completed }}<br>
+        {% endfor %}
+{% endfor %}
 </body>
 </html>
