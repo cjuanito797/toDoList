@@ -1,0 +1,14 @@
+{% extends 'home/home.html' %}
+
+{% block title %}Add a new list{% endblock %}
+
+{% block content %}
+<h1>Add a new list below.</h1>
+<form method="post">
+    {{ list_form }}
+    {{ item_form }}
+    {% csrf_token %}
+    <p><input type="submit" value="Add list"></p>
+</form>
+
+{% endblock %}
