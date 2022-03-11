@@ -1,23 +1,21 @@
-{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+  {% block title %}<title>Welcome</title>{% endblock %}
 </head>
 <body>
-{% block content %}
-    <h1>The ToDo List Application</h1>
-    <li><a href="{% url 'app:new_list'%}">Add a new list</a> </li>
-
-    <h3>See your lists below</h3>
+  {% block sidebar %}
+      <li><a href="{% url 'app:new_list'%}">Add a new list</a> </li>
+  {% endblock %}
+  {% block content %}
+      <h1>Welcome!</h1>
+       <h3>See your lists below</h3>
     {% for list in my_lists %}
     <h3>{{ list.name}}</h3>
     {% for li in list.item.all %}
         {{ li.name }} &nbsp; {{ li.urgency_level }} &nbsp; {{ li.completed }}<br>
         {% endfor %}
 {% endfor %}
-
-{% endblock %}
+  {% endblock %}
 </body>
 </html>
