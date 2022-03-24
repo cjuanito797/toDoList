@@ -1,21 +1,60 @@
-<!DOCTYPE html>
-<html lang="en">
+{% load static %}
 <head>
-  {% block title %}<title>Welcome</title>{% endblock %}
+    {% block title %}<title>Welcome, {{ user.username }}</title>{% endblock %}
+
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+
+    <meta charset="utf-8">
 </head>
-<body>
-  {% block sidebar %}
-      <li><a href="{% url 'app:new_list'%}">Add a new list</a> </li>
-  {% endblock %}
-  {% block content %}
-      <h1>Welcome!</h1>
-       <h3>See your lists below</h3>
-    {% for list in my_lists %}
-    <h3>{{ list.name}}</h3>
-    {% for li in list.item.all %}
-        {{ li.name }} &nbsp; {{ li.urgency_level }} &nbsp; {{ li.completed }}<br>
+
+
+{% block header %}
+    <div id="header">
+        <h1>ToDo √</h1>
+    </div>
+{% endblock %}
+
+{% block navigation %}
+    <div class="top">
+        <div style="text-align: center;">
+        <ul>
+            <li><a href="{% url 'app:home' %}">My Lists</a>
+            <ul>
+                <li><a href="{% url 'app:new_list' %}">Create A New List</a></li>
+
+            </ul>
+            </li>
+            <li><a href="#">ACCOUNT</a>
+                <ul>
+
+                    <li><a href="{% url 'app:editProfile' %}">Edit Profile</a></li>
+
+                </ul>
+            </li>
+
+            <li><a href="#">My Tasks</a>
+                <ul>
+
+                    <li><a href="{% url 'app:addNewTask' %}">Add a new task</a></li>
+
+                </ul>
+            </li>
+        </ul>
+    </div>
+    </div>
+
+{% endblock %}
+
+{% block content %}
+    <div id="displayLists">
+        <h1>Below are your lists</h1>
+        {% for list in my_lists %}
+            <h2>{{ list.name }}</h2>
         {% endfor %}
-{% endfor %}
-  {% endblock %}
-</body>
-</html>
+    </div>
+
+    <div id="topPriorities">
+
+    </div>
+
+{% endblock %}

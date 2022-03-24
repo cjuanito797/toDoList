@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.conf import settings
 # Create your models here.
 class item (models.Model):
     name = models.CharField(max_length=30, blank=False)
@@ -13,4 +13,15 @@ class item (models.Model):
 class list (models.Model):
     item = models.ManyToManyField(item)
     name = models.CharField(max_length=15, blank=False)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,
+                             on_delete=models.CASCADE,
+                             null=True)
+
+class Profile(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL,
+                                on_delete=models.CASCADE,
+                                unique=True)
+    date_of_birth = models.DateField(blank=True, null=True)
+    image = models.ImageField(upload_to='users/%Y/%m/%d',
+                              blank=True)
 
