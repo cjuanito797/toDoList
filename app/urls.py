@@ -14,5 +14,6 @@ urlpatterns = [
     path('editProfile/', views.editProfile, name='editProfile'),
     path('newTask/', views.addNewTask, name='addNewTask'),
     path ('<int:pk>/delete', views.deleteList, name='deleteList'),
+    path ('<int:pk>/edit', views.editList, name='editList'),
 
 ]

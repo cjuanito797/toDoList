@@ -77,17 +77,17 @@
                     <td>{{ list.name }}</td>
                     <td>
                         {% for item in list.item.all %}
-                            <ul>
+                            <ol>
                                 {% ifnotequal item.completed False %}
-                                    <li><p><span style="text-decoration: line-through;">{{ item.name }}</span></p></li>
+                                    <li><span style="text-decoration: line-through;">{{ item.name }}</span></li>
                                 {% else %}
-                                    <li><p>{{ item.name }}</p></li>
+                                    <li>{{ item.name }}</li>
                                 {% endifnotequal %}
 
-                            </ul>
+                            </ol>
                         {% endfor %}
                     </td>
-                    <td><a href="{% url 'app:editProfile' %}"
+                    <td><a href="{% url 'app:editList' pk=list.pk %}"
                            class="btn btn-primary">Edit</a>
                     <td><a href="{% url 'app:deleteList' pk=list.pk %}"
                            onclick="return confirm('Are you sure you want to delete?')"

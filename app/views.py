@@ -45,6 +45,12 @@ def new_list(request):
     return render (request, "userActions/addList.html", {'list_form': list_form, })
 
 @login_required()
+def editList(request, pk):
+    list_instance = get_object_or_404(list, pk=pk)
+    item_instances = list_instance.item.all()
+    return render(request, 'userActions/editList.html')
+
+@login_required()
 def deleteList(request, pk):
     list_instance = get_object_or_404(list, pk=pk)
     item_instances = list_instance.item.all()
