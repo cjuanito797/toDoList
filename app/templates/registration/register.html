@@ -17,7 +17,7 @@
     </div>
 
     <div class="form">
-        <form method="post">
+        <form method="post" autocomplete="off">
             {{ user_form.as_p }}
             {% csrf_token %}
             <p><input type="submit" value="Join Now"></p>

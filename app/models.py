@@ -4,7 +4,7 @@ from django.conf import settings
 class item (models.Model):
     name = models.CharField(max_length=30, blank=False)
     urgency_levels = (("0", "low"), ("1", "normal"), ("2", "High"), ("3", "Critical"))
-    urgency_level = models.CharField(max_length=10, choices=urgency_levels, default="0")
+    urgency_level = models.CharField(max_length=10, choices=urgency_levels, default="low")
     completed = models.BooleanField(default=False)
 
     def __str__(self):
@@ -16,6 +16,10 @@ class list (models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
                              on_delete=models.CASCADE,
                              null=True)
+
+    def delete(self, using=None, keep_parents=False):
+        item.delete(self)
+
 
 class Profile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL,

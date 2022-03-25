@@ -17,10 +17,12 @@ class ListForm (ModelForm):
         fields = ('name',)
 
 
-class LoginForm (ModelForm):
+class LoginForm (forms.Form):
     username = forms.CharField (label='', required=True, widget=forms.TextInput (attrs={'placeholder': 'Username'}))
     password = forms.CharField (label='', widget=forms.PasswordInput (attrs={'placeholder': 'Password'}),
                                 required=True)
+
+
 
 
 class UserRegistration (forms.ModelForm):

@@ -1,5 +1,56 @@
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap");
+table {
+  table-layout: fixed;
+  width: 100%;
+  border-collapse: collapse;
+  border: 3px solid white;
+}
+html {
+  font-family: 'helvetica neue', helvetica, arial, sans-serif;
+}
 
+thead th, tfoot th {
+  font-family: 'Rock Salt', cursive;
+}
+
+th {
+  letter-spacing: 2px;
+    border: 1px solid white;
+}
+
+td {
+    border: 1px solid white;
+    display: block;
+  letter-spacing: 1px;
+}
+
+tbody td {
+    display: block;
+  text-align: center;
+}
+
+tfoot th {
+  text-align: right;
+}
+thead th:nth-child(1) {
+  width: 30%;
+}
+
+thead th:nth-child(2) {
+  width: 20%;
+}
+
+thead th:nth-child(3) {
+  width: 15%;
+}
+
+thead th:nth-child(4) {
+  width: 35%;
+}
+
+th, td {
+  padding: 20px;
+}
 .intro{
     text-align: center;
     color: white;
@@ -416,4 +467,16 @@ input[type=submit] {
 
         .top ul li:hover ul {
             display: block;
+        }
+
+        .btn-danger {
+            padding: 10px;
+            border-radius: 8px;
+            background-color: red;
+        }
+
+        .btn-primary {
+            padding: 10px;
+            border-radius: 8px;
+            background-color: blue;
         }

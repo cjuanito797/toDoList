@@ -1,31 +1,41 @@
 from django.shortcuts import render, redirect, reverse
-from .models import list, item
-from .forms import ListForm, ItemForm, LoginForm, UserRegistration
-from django.contrib.auth import authenticate, login
+from .models import list, item, Profile
+from .forms import ListForm, ItemForm, UserRegistration, LoginForm
+from django.contrib.auth import authenticate, login, logout
+from django.contrib import messages
 from django.http import HttpResponse, HttpResponseRedirect
+from django.views.decorators.cache import cache_control
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import AuthenticationForm
+from django.shortcuts import render, get_object_or_404
 
 
 # Create your views here.
 
 # On the home page we can show a lists' webpage, for now we won't worry about user authentication
+@login_required ( )
 def home(request):
     my_lists = list.objects.filter (user_id=request.user)
 
     return render (request, '../templates/home/home.html', {'my_lists': my_lists})
 
+@login_required()
 def editProfile(reqeust):
     return render (reqeust, '../templates/userActions/editProfile.html')
 
+@login_required()
 def addNewTask(request):
-    return render(request, '../templates/userActions/newTask.html')
+    return render (request, '../templates/userActions/newTask.html')
 
+@login_required()
 def new_list(request):
     if request.method == "POST":
         list_form = ListForm (request.POST)
 
         if list_form.is_valid ( ):
             list = list_form.save ( )
-            list.save ( )
+            list.save ( commit=False)
+
 
             return redirect (reverse ('app:home'))
 
@@ -34,35 +44,34 @@ def new_list(request):
 
     return render (request, "userActions/addList.html", {'list_form': list_form, })
 
+@login_required()
+def deleteList(request, pk):
+    list_instance = get_object_or_404(list, pk=pk)
+    item_instances = list_instance.item.all()
+    item_instances.delete()
+    list_instance.delete()
+    return redirect('app:home')
 
-def user_login(request):
-    if request.method == 'POST':
-        form = LoginForm (request.POST)
-
+@cache_control (no_cache=True, must_revalidate=True, no_store=True)
+def login_request(request):
+    if request.method == "POST":
+        form = LoginForm(request.POST)
         if form.is_valid ( ):
-            # clean the data
-
-            cd = form.cleaned_data
-            # perform an authenticatication on the user based off of the username and password grabbed from the form
-            user = authenticate (request,
-                                 username=cd['username'],
-                                 password=cd['password'])
-
-        # if the user does exist, meaning it is not None
-        if user is not None:
-            if user.is_active:
+            username = form.cleaned_data.get ('username')
+            password = form.cleaned_data.get ('password')
+            user = authenticate (username=username, password=password)
+            if user is not None:
                 login (request, user)
-                return render (request, 'home/home.html')
+                return redirect ("app:home")
             else:
-                return HttpResponse ("Invalid Account")
+                messages.error (request, "Invalid username or password.")
         else:
-            return HttpResponse ("Invalid Login")
-
-    else:
-        form = LoginForm ( )
-        return render (request, 'registration/login.html', {'form': form})
+            messages.error (request, "Invalid username or password.")
+    form = LoginForm()
+    return render (request=request, template_name="registration/login.html", context={"login_form": form})
 
 
+@cache_control (no_cache=True, must_revalidate=True, no_store=True)
 def register(request):
     if request.method == 'POST':
         user_form = UserRegistration (request.POST)
@@ -75,11 +84,16 @@ def register(request):
             # Save the User object
             new_user.save ( )
             Profile.objects.create (user=new_user)
-            return render (request,
-                           'registration/login.html',
-                           {'new_user': new_user})
+            login (request, new_user)
+            return redirect ('app:home')
     else:
         user_form = UserRegistration ( )
     return render (request,
                    'registration/register.html',
                    {'user_form': user_form})
+
+
+def logout_request(request):
+    logout (request)
+    messages.info (request, "You have successfully logged out.")
+    return redirect ("app:login")

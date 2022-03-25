@@ -1,11 +1,12 @@
 {% load static %}
+{% block head %}
 <head>
     {% block title %}<title>Welcome, {{ user.username }}</title>{% endblock %}
-
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-
+    <link rel="stylesheet" href="../../static/css/styles.css">
     <meta charset="utf-8">
 </head>
+
+{% endblock %}
 
 
 {% block header %}
@@ -15,42 +16,89 @@
 {% endblock %}
 
 {% block navigation %}
-    <div class="top">
-        <div style="text-align: center;">
-        <ul>
-            <li><a href="{% url 'app:home' %}">My Lists</a>
-            <ul>
-                <li><a href="{% url 'app:new_list' %}">Create A New List</a></li>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarText">
+    <ul class="navbar-nav mr-auto">
+      {% if user.is_authenticated %}
 
-            </ul>
-            </li>
-            <li><a href="#">ACCOUNT</a>
-                <ul>
 
-                    <li><a href="{% url 'app:editProfile' %}">Edit Profile</a></li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'app:new_list'%}">Create New List</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'app:addNewTask' %}">Add New Task</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'app:editProfile' %}">Edit Profile</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'app:home'%}">My Lists</a>
+      </li>
 
-                </ul>
-            </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'app:logout' %}">Logout</a>
+      </li>
 
-            <li><a href="#">My Tasks</a>
-                <ul>
+      {% else %}
 
-                    <li><a href="{% url 'app:addNewTask' %}">Add a new task</a></li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'app:login' %}">Login</a>
+      </li>
 
-                </ul>
-            </li>
-        </ul>
-    </div>
-    </div>
+      {% endif %}
+    </ul>
+  </div>
+</nav>
 
 {% endblock %}
 
 {% block content %}
+
+    <div class="intro">
+    <h1>Welcome,&nbsp;{{ user.username }}!</h1>
+    </div>
     <div id="displayLists">
         <h1>Below are your lists</h1>
-        {% for list in my_lists %}
-            <h2>{{ list.name }}</h2>
-        {% endfor %}
+        <table id="myList">
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Items</th>
+                <th colspan="2">Actions</th>
+            </tr>
+
+            </thead>
+
+            <tbody>
+            {% for list in my_lists %}
+                <tr>
+                    <td>{{ list.name }}</td>
+                    <td>
+                        {% for item in list.item.all %}
+                            <ul>
+                                {% ifnotequal item.completed False %}
+                                    <li><p><span style="text-decoration: line-through;">{{ item.name }}</span></p></li>
+                                {% else %}
+                                    <li><p>{{ item.name }}</p></li>
+                                {% endifnotequal %}
+
+                            </ul>
+                        {% endfor %}
+                    </td>
+                    <td><a href="{% url 'app:editProfile' %}"
+                           class="btn btn-primary">Edit</a>
+                    <td><a href="{% url 'app:deleteList' pk=list.pk %}"
+                           onclick="return confirm('Are you sure you want to delete?')"
+                           class="btn btn-danger">Delete</a>
+                    </td>
+                </tr>
+            {% endfor %}
+
+
+            </tbody>
+        </table>
     </div>
 
     <div id="topPriorities">

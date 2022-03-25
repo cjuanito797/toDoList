@@ -1,14 +1,27 @@
 {% extends 'home/home.html' %}
 {% load static %}
+{% block head %}
+    <link rel="stylesheet" href="../../static/css/styles.css">
+    <script type="text/javascript">
 
+        function preventBack() {
+            window.history.forward();
+        }
+
+        setTimeout("preventBack()", 0);
+
+        window.onunload = function () {
+            null
+        };
+
+    </script>
+{% endblock %}
 {% block title %}
     <title>Login</title>
 {% endblock %}
 
 {% block navigation %}
-    <ul>
-        <li><a href="{% url 'app:register' %}"><h2>Sign Up</h2></a></li>
-    </ul>
+
 
 {% endblock %}
 
@@ -19,13 +32,17 @@
         <h3>Login below or use the sign-up option to utilize our services.</h3>
     </div>
 
-    <div class="form">
-        <form action="{% url 'app:user_login' %}" method="post">
-            {{ form.as_p }}
-            {% csrf_token %}
-            <br>
-            <p><input type="submit" value="Log-in"></p>
-        </form>
+    {% load crispy_forms_tags %}
 
-    </div>
+<!--Login-->
+<div class="form">
+  <h1>Login</h1>
+  <form method="POST" autocomplete="off">
+    {% csrf_token %}
+    {{ login_form|crispy }}
+    <button class="btn btn-primary" type="submit">Login</button>
+  </form>
+  <p class="text-center">Don't have an account? <a href="/register" style="text-underline: white;">Create an account</a>.</p>
+</div>
+
 {% endblock %}
