@@ -1,16 +1,35 @@
-from django.shortcuts import render, redirect, reverse
-from .models import list, item, Profile
-from .forms import ListForm, ItemForm, UserRegistration, LoginForm
-from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
-from django.http import HttpResponse, HttpResponseRedirect
-from django.views.decorators.cache import cache_control
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import AuthenticationForm
+from django.shortcuts import redirect, reverse
 from django.shortcuts import render, get_object_or_404
+from django.views.decorators.cache import cache_control
 
+from .forms import ListForm, UserRegistration, LoginForm, ItemForm
+from .models import list, Profile, item
 
-# Create your views here.
+from django.shortcuts import render, redirect
+
+from .forms import ItemModelFormset
+
+def create_item_model_form(request):
+    template_name = 'userActions/newTask.html'
+    heading_message = 'Add new toDo tasks below.'
+    if request.method == 'GET':
+        # we don't want to display the already saved model instances
+        formset = ItemModelFormset(queryset=item.objects.none())
+    elif request.method == 'POST':
+        formset = ItemModelFormset(request.POST)
+        if formset.is_valid():
+            for form in formset:
+                # only save if name is present
+                if form.cleaned_data.get('task'):
+                    form.save()
+            return redirect('app:home')
+    return render(request, template_name, {
+        'formset': formset,
+        'heading': heading_message,
+    })
 
 # On the home page we can show a lists' webpage, for now we won't worry about user authentication
 @login_required ( )
@@ -19,49 +38,64 @@ def home(request):
 
     return render (request, '../templates/home/home.html', {'my_lists': my_lists})
 
-@login_required()
+
+@login_required ( )
 def editProfile(reqeust):
     return render (reqeust, '../templates/userActions/editProfile.html')
 
-@login_required()
+
+@login_required ( )
 def addNewTask(request):
     return render (request, '../templates/userActions/newTask.html')
 
-@login_required()
+
+@login_required ( )
 def new_list(request):
     if request.method == "POST":
         list_form = ListForm (request.POST)
+        item_form = ItemForm (request.POST)
 
-        if list_form.is_valid ( ):
-            list = list_form.save ( )
-            list.save ( commit=False)
+        if list_form.is_valid ( ) and item_form.is_valid ( ):
+            list = list_form.save (commit=False)
+            item = item_form.save (commit=False)
+            # wait to save the newly created list until after we have, tied the list.user_id
+            # to the id of the current logged-in user.
+            list.user_id = request.user.id
+            list.save ( )
 
+            # after we have saved our list we will need to go ahead and add our items to our list
+            item.save ( )
+            list.item.add (item)
 
             return redirect (reverse ('app:home'))
 
     else:
         list_form = ListForm ( )
+        item_form = ItemForm ( )
 
-    return render (request, "userActions/addList.html", {'list_form': list_form, })
+    return render (request, "userActions/addList.html", {'list_form': list_form, 'item_form': item_form})
 
-@login_required()
+
+@login_required ( )
 def editList(request, pk):
-    list_instance = get_object_or_404(list, pk=pk)
-    item_instances = list_instance.item.all()
-    return render(request, 'userActions/editList.html')
+    list_instance = get_object_or_404 (list, pk=pk)
+    item_instances = list_instance.item.all ( )
+    return render (request, 'userActions/editList.html')
 
-@login_required()
+
+@login_required ( )
 def deleteList(request, pk):
-    list_instance = get_object_or_404(list, pk=pk)
-    item_instances = list_instance.item.all()
-    item_instances.delete()
-    list_instance.delete()
-    return redirect('app:home')
+    list_instance = get_object_or_404 (list, pk=pk)
+    item_instances = list_instance.item.all ( )
+    item_instances.delete ( )
+    list_instance.delete ( )
+    return redirect ('app:home')
+
 
 @cache_control (no_cache=True, must_revalidate=True, no_store=True)
 def login_request(request):
     if request.method == "POST":
-        form = LoginForm(request.POST)
+        form = LoginForm (request.POST)
         if form.is_valid ( ):
             username = form.cleaned_data.get ('username')
             password = form.cleaned_data.get ('password')
@@ -73,7 +107,7 @@ def login_request(request):
                 messages.error (request, "Invalid username or password.")
         else:
             messages.error (request, "Invalid username or password.")
-    form = LoginForm()
+    form = LoginForm ( )
     return render (request=request, template_name="registration/login.html", context={"login_form": form})
 
 

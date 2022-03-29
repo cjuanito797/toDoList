@@ -3,12 +3,26 @@ from .models import list, item
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
+from django.forms import modelformset_factory
+
+ItemModelFormset = modelformset_factory (
+    item,
+    fields=('task',),
+    extra=1,
+    widgets={
+        'task': forms.TextInput (attrs={
+            'class': 'form-control',
+            'placeholder': 'Enter task name here'
+        })
+    }
+
+)
 
 
 class ItemForm (ModelForm):
     class Meta:
         model = item
-        fields = ('name',)
+        fields = ('task',)
 
 
 class ListForm (ModelForm):
@@ -21,8 +35,6 @@ class LoginForm (forms.Form):
     username = forms.CharField (label='', required=True, widget=forms.TextInput (attrs={'placeholder': 'Username'}))
     password = forms.CharField (label='', widget=forms.PasswordInput (attrs={'placeholder': 'Password'}),
                                 required=True)
-
-
 
 
 class UserRegistration (forms.ModelForm):

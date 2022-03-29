@@ -2,13 +2,13 @@ from django.db import models
 from django.conf import settings
 # Create your models here.
 class item (models.Model):
-    name = models.CharField(max_length=30, blank=False)
-    urgency_levels = (("0", "low"), ("1", "normal"), ("2", "High"), ("3", "Critical"))
-    urgency_level = models.CharField(max_length=10, choices=urgency_levels, default="low")
+    task = models.CharField(max_length=30, blank=False)
+     # urgency_levels = (("0", "low"), ("1", "normal"), ("2", "High"), ("3", "Critical"))
+    # urgency_level = models.CharField(max_length=10, choices=urgency_levels, default="low")
     completed = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.name
+        return self.task
 
 class list (models.Model):
     item = models.ManyToManyField(item)

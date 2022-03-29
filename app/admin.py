@@ -4,7 +4,7 @@ from .models import item, list, Profile
 # Register your models here.
 @admin.register(item)
 class ItemAdmin(admin.ModelAdmin):
-    list_display = ['name', 'urgency_level', 'completed']
+    list_display = ['task', 'completed']
 
 
 @admin.register(list)

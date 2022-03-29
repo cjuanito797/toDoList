@@ -4,7 +4,20 @@
 
 {% block content %}
     <div class="intro">
-    <h1>Currently under construction</h1>
+    <h1>Add A ToDo List</h1>
     </div>
+
+    <div class="form">
+    <!-- Used for displaying of form to add a new list -->
+    <form method="post" action="{% url 'app:new_list' %} " autocomplete="off">
+        {% csrf_token %}
+        {{ list_form.as_p }}
+        <p><input type="submit"></p>
+
+        <a href=
+    </form>
+    </div>
+
+
 
 {% endblock %}

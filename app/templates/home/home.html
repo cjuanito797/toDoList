@@ -1,10 +1,11 @@
 {% load static %}
 {% block head %}
-<head>
-    {% block title %}<title>Welcome, {{ user.username }}</title>{% endblock %}
-    <link rel="stylesheet" href="../../static/css/styles.css">
-    <meta charset="utf-8">
-</head>
+    <head>
+        {% block title %}<title>Welcome, {{ user.username }}</title>{% endblock %}
+        <link rel="stylesheet" href="../../static/css/styles.css">
+
+        <meta charset="utf-8">
+    </head>
 
 {% endblock %}
 
@@ -17,47 +18,45 @@
 
 {% block navigation %}
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-  <div class="collapse navbar-collapse" id="navbarText">
-    <ul class="navbar-nav mr-auto">
-      {% if user.is_authenticated %}
+        <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarText">
+            <ul class="navbar-nav mr-auto">
+                {% if user.is_authenticated %}
 
 
-      <li class="nav-item">
-        <a class="nav-link" href="{% url 'app:new_list'%}">Create New List</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="{% url 'app:addNewTask' %}">Add New Task</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="{% url 'app:editProfile' %}">Edit Profile</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="{% url 'app:home'%}">My Lists</a>
-      </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'app:new_list' %}">Create New List</a>
+                    </li>
 
-      <li class="nav-item">
-        <a class="nav-link" href="{% url 'app:logout' %}">Logout</a>
-      </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'app:editProfile' %}">Edit Profile</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'app:home' %}">My Lists</a>
+                    </li>
 
-      {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'app:logout' %}">Logout</a>
+                    </li>
 
-      <li class="nav-item">
-        <a class="nav-link" href="{% url 'app:login' %}">Login</a>
-      </li>
+                {% else %}
 
-      {% endif %}
-    </ul>
-  </div>
-</nav>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'app:login' %}">Login</a>
+                    </li>
+
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
 
 {% endblock %}
 
 {% block content %}
 
     <div class="intro">
-    <h1>Welcome,&nbsp;{{ user.username }}!</h1>
+        <h1>Welcome,&nbsp;{{ user.username }}!</h1>
     </div>
     <div id="displayLists">
         <h1>Below are your lists</h1>
@@ -79,9 +78,9 @@
                         {% for item in list.item.all %}
                             <ol>
                                 {% ifnotequal item.completed False %}
-                                    <li><span style="text-decoration: line-through;">{{ item.name }}</span></li>
+                                    <li><span style="text-decoration: line-through;">{{ item.task }}</span></li>
                                 {% else %}
-                                    <li>{{ item.name }}</li>
+                                    <li>{{ item.task }}</li>
                                 {% endifnotequal %}
 
                             </ol>
