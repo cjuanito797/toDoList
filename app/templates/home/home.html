@@ -3,7 +3,6 @@
     <head>
         {% block title %}<title>Welcome, {{ user.username }}</title>{% endblock %}
         <link rel="stylesheet" href="../../static/css/styles.css">
-
         <meta charset="utf-8">
     </head>
 
@@ -59,13 +58,13 @@
         <h1>Welcome,&nbsp;{{ user.username }}!</h1>
     </div>
     <div id="displayLists">
-        <h1>Below are your lists</h1>
+        <h1>Below are your lists and tasks</h1>
         <table id="myList">
             <thead>
             <tr>
                 <th>Name</th>
                 <th>Items</th>
-                <th colspan="2">Actions</th>
+                <th colspan="3">Actions</th>
             </tr>
 
             </thead>
@@ -75,19 +74,21 @@
                 <tr>
                     <td>{{ list.name }}</td>
                     <td>
+
                         {% for item in list.item.all %}
                             <ol>
-                                {% ifnotequal item.completed False %}
-                                    <li><span style="text-decoration: line-through;">{{ item.task }}</span></li>
-                                {% else %}
-                                    <li>{{ item.task }}</li>
-                                {% endifnotequal %}
-
+                                <input name="packersOff" class="strikethrough" value="1" type="checkbox" onclick="">
+                                <label for="packersOff" class="strikeThis">{{ item.task }}</label>
+                                <br>
+                                <br>
                             </ol>
                         {% endfor %}
                     </td>
                     <td><a href="{% url 'app:editList' pk=list.pk %}"
-                           class="btn btn-primary">Edit</a>
+                           class="btn btn-primary">Edit List</a>
+                    </td>
+                    <td><a href="{% url 'app:create_item_model_form' pk=list.pk %}"
+                           class="btn btn-primary">Add Tasks</a>
                     <td><a href="{% url 'app:deleteList' pk=list.pk %}"
                            onclick="return confirm('Are you sure you want to delete?')"
                            class="btn btn-danger">Delete</a>

@@ -12,7 +12,7 @@ urlpatterns = [
     path ('register/', views.register, name='register'),
     path('newlist/', views.new_list, name='new_list'),
     path('editProfile/', views.editProfile, name='editProfile'),
-    path('newTask/', views.create_item_model_form, name='create_item_model_form'),
+    path('<int:pk>/newTask/', views.create_item_model_form, name='create_item_model_form'),
     path ('<int:pk>/delete', views.deleteList, name='deleteList'),
     path ('<int:pk>/edit', views.editList, name='editList'),
 

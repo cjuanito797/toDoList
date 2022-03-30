@@ -12,7 +12,8 @@ from django.shortcuts import render, redirect
 
 from .forms import ItemModelFormset
 
-def create_item_model_form(request):
+def create_item_model_form(request, pk):
+    list_instance = get_object_or_404 (list, pk=pk)
     template_name = 'userActions/newTask.html'
     heading_message = 'Add new toDo tasks below.'
     if request.method == 'GET':
@@ -21,14 +22,17 @@ def create_item_model_form(request):
     elif request.method == 'POST':
         formset = ItemModelFormset(request.POST)
         if formset.is_valid():
-            for form in formset:
+            for item_form in formset:
                 # only save if name is present
-                if form.cleaned_data.get('task'):
-                    form.save()
+                if item_form.cleaned_data.get('task'):
+                    item_instance = item_form.save(commit=False)
+                    item_instance.save()
+                    list_instance.item.add(item_instance)
             return redirect('app:home')
     return render(request, template_name, {
         'formset': formset,
         'heading': heading_message,
+        'list_instance': list_instance
     })
 
 # On the home page we can show a lists' webpage, for now we won't worry about user authentication
@@ -53,27 +57,20 @@ def addNewTask(request):
 def new_list(request):
     if request.method == "POST":
         list_form = ListForm (request.POST)
-        item_form = ItemForm (request.POST)
 
-        if list_form.is_valid ( ) and item_form.is_valid ( ):
+        if list_form.is_valid ( ):
             list = list_form.save (commit=False)
-            item = item_form.save (commit=False)
             # wait to save the newly created list until after we have, tied the list.user_id
             # to the id of the current logged-in user.
             list.user_id = request.user.id
             list.save ( )
 
-            # after we have saved our list we will need to go ahead and add our items to our list
-            item.save ( )
-            list.item.add (item)
-
             return redirect (reverse ('app:home'))
 
     else:
         list_form = ListForm ( )
-        item_form = ItemForm ( )
 
-    return render (request, "userActions/addList.html", {'list_form': list_form, 'item_form': item_form})
+    return render (request, "userActions/addList.html", {'list_form': list_form,})
 
 
 @login_required ( )
