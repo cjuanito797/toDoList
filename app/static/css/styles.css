@@ -497,6 +497,12 @@ input[type=button] {
     background-color: blue;
 }
 
+.btn-complete {
+    padding: 6px;
+    border-radius: 8px;
+    background-color: green;
+}
+
  .strikethrough:checked + .strikeThis {
     text-decoration: line-through
 }
