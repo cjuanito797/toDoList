@@ -29,9 +29,6 @@
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'app:editProfile' %}">Edit Profile</a>
-                    </li>
-                    <li class="nav-item">
                         <a class="nav-link" href="{% url 'app:home' %}">My Lists</a>
                     </li>
 
@@ -78,16 +75,16 @@
 
                         {% for item in list.item.all %}
                             <ol>
-                                <input name="packersOff" class="strikethrough" value="1" type="checkbox" onclick="">
+
                                 <label for="packersOff" class="strikeThis">{{ item.task }}</label>
+                                <a href="{% url 'app:completeItem' pk=item.pk %}"
+                           class="btn btn-complete">Complete</a>
                                 <br>
                                 <br>
                             </ol>
                         {% endfor %}
                     </td>
-                    <td><a href="{% url 'app:editList' pk=list.pk %}"
-                           class="btn btn-primary">Edit List</a>
-                    </td>
+
                     <td><a href="{% url 'app:create_item_model_form' pk=list.pk %}"
                            class="btn btn-primary">Add Tasks</a>
                     <td><a href="{% url 'app:deleteList' pk=list.pk %}"
