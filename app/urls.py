@@ -14,6 +14,6 @@ urlpatterns = [
     path('editProfile/', views.editProfile, name='editProfile'),
     path('<int:pk>/newTask/', views.create_item_model_form, name='create_item_model_form'),
     path ('<int:pk>/delete', views.deleteList, name='deleteList'),
-    path ('<int:pk>/edit', views.editList, name='editList'),
+    path('<int:pk>/complete', views.completeItem, name='completeItem'),
 
 ]
