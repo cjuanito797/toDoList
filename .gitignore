@@ -3,10 +3,4 @@ venv
 __pycache__
 local_settings.py
 .idea
-db.sqlite3
-chinesseRestaurant/.DS_Store
-.DS_Store
-*.sqlite3
-
-# Project exclude paths
-/venvg/
+db.sqlite3 
